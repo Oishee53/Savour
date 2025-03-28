@@ -19,6 +19,7 @@ public class Main {
                 "MaleExercise.csv",
                 "FemaleExercise.csv",
                 "WorkoutFile.csv",
+                "MetValueFile.csv"
         };
         for (String csvFile : csvFiles) {
             createCSVFile(csvFile);
@@ -201,7 +202,7 @@ public class Main {
             for (User user : userManager.getUserList()) {
                 if (user.getEmail().equalsIgnoreCase(loginEmail) && user.getGender().equalsIgnoreCase("Male")) {
 
-                    workout.NewMaleWorkout(user,scanner);
+                    workout.NewWorkout(user,scanner,"MaleExercise.csv");
                 }
                 else if (user.getEmail().equalsIgnoreCase(loginEmail) && user.getGender().equalsIgnoreCase("Female")){
 
