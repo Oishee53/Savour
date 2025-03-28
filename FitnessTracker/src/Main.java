@@ -3,14 +3,14 @@ import java.io.IOException;
 import java.util.Scanner;
 
 public class Main {
-    static Main main=new Main();
-    FileHandling fileHandling=new FileHandling();
-    static LoadData loadData= new LoadData();
-    static UserManager userManager= new UserManager();
+    static Main main = new Main();
+    FileHandling fileHandling = new FileHandling();
+    static HelperFunctions helperFunctions = new HelperFunctions();
+    static UserManager userManager = new UserManager();
     static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) throws IOException {
-        String[] csvFiles={
+        String[] csvFiles = {
                 "UserFile.csv",
                 "MaleExercise.csv",
                 "FemaleExercise.csv",
@@ -19,35 +19,31 @@ public class Main {
         for (String csvFile : csvFiles) {
             createCSVFile(csvFile);
         }
-        loadData.LoadUserDetails(userManager);
+        helperFunctions.LoadUserDetails(userManager);
         main.consoleApp();
-      }
-
-
-
-      
-
+    }
 
 
     public void consoleApp() throws IOException {
         System.out.println("Workout and Diet Tracker\n");
         System.out.println("Enter your choice:");
-        System.out.println("1.Register as new member");
+        System.out.println("1.Register");
         System.out.println("2.Login");
-        int initialChoice=scanner.nextInt();
-        if(initialChoice==1){
+        int initialChoice = scanner.nextInt();
+        if (initialChoice == 1) {
 
             registration();
 
-        } else if (initialChoice==2) {
+        } else if (initialChoice == 2) {
 
-            login();
+            login("UserFile.csv");
 
         }
 
 
     }
-    private static void createCSVFile (String fileName){
+
+    private static void createCSVFile(String fileName) {
         File file = new File(fileName);
         try {
             // Create the file
@@ -61,55 +57,71 @@ public class Main {
             e.printStackTrace();
         }
     }
-    public void registration(){
+
+    public void registration() {
         System.out.println("Enter Name:");
-        String name=scanner.next();
+        String name = scanner.next();
         System.out.println("Enter email:");
-        String email= scanner.next();
+        String email = scanner.next();
         System.out.println("Enter Password");
-        String password=scanner.next();
+        String password = scanner.next();
         System.out.println("Select Gender: \n1.Male\n2.Female");
         int selectGender = scanner.nextInt();
         String gender = null;
-        while(selectGender!=1 && selectGender!=2){
+        while (selectGender != 1 && selectGender != 2) {
             System.out.println("Invalid choice!");
             System.out.println("Select Gender: \n1.Male\n2.Female");
             selectGender = scanner.nextInt();
         }
-        if(selectGender == 1){
+        if (selectGender == 1) {
             gender = "Male";
-        }
-        else if(selectGender == 2){
+        } else if (selectGender == 2) {
             gender = "Female";
         }
         System.out.println("Enter Age");
-        int age=scanner.nextInt();
+        int age = scanner.nextInt();
         System.out.println("Enter Weight:");
-        int weight=scanner.nextInt();
+        int weight = scanner.nextInt();
         System.out.println("Enter Height in cm:");
-        int height=scanner.nextInt();
+        int height = scanner.nextInt();
         System.out.println("Select goal\n1.Strength Building\n2.Weightloss");
         int selectGoal = scanner.nextInt();
         String goal = null;
-        while(selectGoal!=1 && selectGoal!=2){
+        while (selectGoal != 1 && selectGoal != 2) {
             System.out.println("Invalid choice!");
             System.out.println("Select goal\n1.Strength Building\n2.Weightloss");
             selectGoal = scanner.nextInt();
         }
-        if(selectGoal==1){
+        if (selectGoal == 1) {
             goal = "StrengthBuilding";
         }
-        if(selectGoal==2){
+        if (selectGoal == 2) {
             goal = "WeightLoss";
         }
-        User user= new User(name,email,password,gender,age,weight,height,goal);
+        User user = new User(name, email, password, gender, age, weight, height, goal);
         userManager.addUsers(user);
-        fileHandling.writeUsers(userManager.getUserList(),false);
+        fileHandling.writeUsers(userManager.getUserList(), false);
 
         System.out.println("Registered successfully!!");
     }
-    public void login(){
 
+    public void login(String filename) {
+        System.out.print("Enter your email:\n");
+        String loginEmail = scanner.next();
+        System.out.print("Enter your password:\n");
+        String loginPassword = scanner.next();
+        boolean isAuthenticated = helperFunctions.authenticateLogin(loginEmail, loginPassword, filename);
+        if (isAuthenticated) {
+            System.out.println("Logged in successfully");
+            nextSteps();
+
+        } else {
+            System.out.println("Wrong email or password:");
+
+
+        }
+    }
+    public void nextSteps(){
 
 
     }
