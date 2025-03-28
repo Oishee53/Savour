@@ -9,6 +9,8 @@ public class Main {
     static UserManager userManager = new UserManager();
     FitnessGoal fitnessGoal= new FitnessGoal();
     TDEECalculator tdeeCalculator = new TDEECalculator();
+    DashBoard dashboard= new DashBoard();
+    Workout workout=new Workout();
     static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) throws IOException {
@@ -132,16 +134,54 @@ public class Main {
         int Choice = scanner.nextInt();
         scanner.nextLine(); // Consume leftover newline
         if (Choice == 1) {
-            fileHandling.readUserDetails(loginEmail, loginPassword);
-        } else if (Choice == 2) {
-          suggestionOnGoal(loginEmail);
-        } else if (Choice==3) {
 
+            fileHandling.readUserDetails(loginEmail, loginPassword);
+
+        } else if (Choice == 2) {
+
+            suggestionOnGoal(loginEmail);
+
+        }
+
+
+        else if (Choice==3) {
+            System.out.println("1.Dashboard");
+            System.out.println("2.Workout");
+            int trackingChoice = scanner.nextInt();
+            if (trackingChoice == 1) {
+
+              DashBoardOnProfile(loginEmail);
+
+            }
+
+
+
+            else if (trackingChoice == 2) {
+                System.out.println("1.Post new workout");
+                System.out.println("2.Past workouts");
+                int WorkoutChoice = scanner.nextInt();
+                if (WorkoutChoice == 1) {
+
+                    //Post new workouts
+                    postNewWorkout(loginEmail);
+
+                }
+                else if (WorkoutChoice == 2) {
+                    //Past workouts
+                    for (User user : userManager.getUserList()) {
+                        if (user.getEmail().equalsIgnoreCase(loginEmail)) {
+                            workout.pastWorkout(user);
+                        }
+                    }
+                }
+            }
         }
         else {
             main.consoleApp();
         }
-    }
+        }
+
+
     public void suggestionOnGoal(String loginEmail){
         for (User user : userManager.getUserList()) {
             if (user.getEmail().equalsIgnoreCase(loginEmail)) {
@@ -150,6 +190,29 @@ public class Main {
             }
             }
         }
+        public void DashBoardOnProfile(String loginEmail){
+        for (User user : userManager.getUserList()) {
+                if (user.getEmail().equalsIgnoreCase(loginEmail)) {
+                    dashboard.graph(user);
+                }
+            }
+        }
+        public void postNewWorkout(String loginEmail){
+            for (User user : userManager.getUserList()) {
+                if (user.getEmail().equalsIgnoreCase(loginEmail) && user.getGender().equalsIgnoreCase("Male")) {
+
+                    workout.NewMaleWorkout(user,scanner);
+                }
+                else if (user.getEmail().equalsIgnoreCase(loginEmail) && user.getGender().equalsIgnoreCase("Female")){
+
+                    workout.NewFemaleWorkout(user,scanner);
+
+                }
+            }
+
+
+        }
 
 
     }
+
