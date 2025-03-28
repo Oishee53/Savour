@@ -1,4 +1,5 @@
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Scanner;
 
@@ -131,6 +132,7 @@ public class Main {
         System.out.println("1. View Your Details");
         System.out.println("2. View Suggestions Based On Your Goal");
         System.out.println("3. Track your progress");
+        System.out.println("4.Set timer for workout");
         System.out.println("5. Logout");
         int Choice = scanner.nextInt();
         scanner.nextLine(); // Consume leftover newline
@@ -168,18 +170,18 @@ public class Main {
 
                 }
                 else if (WorkoutChoice == 2) {
+
                     //Past workouts
-                    for (User user : userManager.getUserList()) {
-                        if (user.getEmail().equalsIgnoreCase(loginEmail)) {
-                            workout.pastWorkout(user);
-                        }
-                    }
+                    pastWorkout(loginEmail);
+
                 }
             }
         }
+
         else {
             main.consoleApp();
         }
+
         }
 
 
@@ -198,12 +200,22 @@ public class Main {
                 }
             }
         }
-        public void postNewWorkout(String loginEmail){
+        public void postNewWorkout(String loginEmail) throws FileNotFoundException {
             for (User user : userManager.getUserList()) {
                 if (user.getEmail().equalsIgnoreCase(loginEmail)) {
                     workout.NewWorkout(user,scanner);
                 }
             }
+        }
+
+        public void pastWorkout(String loginEmail){
+            for (User user : userManager.getUserList()) {
+                if (user.getEmail().equalsIgnoreCase(loginEmail)) {
+                    workout.pastWorkout(user);
+                }
+            }
+
+
         }
 
 

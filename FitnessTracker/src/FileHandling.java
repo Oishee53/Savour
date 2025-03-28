@@ -28,7 +28,7 @@ public class FileHandling {
                         valueWidth = Math.max(valueWidth, row[1].length());
                     }
 
-// Print the table with proper alignment
+                   // Print the table with proper alignment
                     String format = "| %-" + fieldWidth + "s | %-" + valueWidth + "s |%n";
                     System.out.println("-".repeat(fieldWidth + valueWidth + 7));
                     for (String[] row : table) {
@@ -80,5 +80,25 @@ public class FileHandling {
                 }
             }
         }
+        public String[] readCSVFilesBySplitting(String filename) {
+            String[] data = new String[0];
+            try (BufferedReader bufferedReader = new BufferedReader(new FileReader(filename))) {
+                String line;
 
-    }
+                // Read each line from the file until the end
+                while ((line = bufferedReader.readLine()) != null) {
+                    // Split the line into data columns
+                    data = line.split(",");
+                    return data;
+
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+            return data;
+        }
+
+
+
+}

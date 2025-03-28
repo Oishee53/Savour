@@ -2,6 +2,7 @@ import java.io.*;
 import java.util.Scanner;
 
 public class Workout {
+    FileHandling fileHandling= new FileHandling();
     public void NewWorkout(User user,Scanner scanner){
         String workout=null;
         String exercise = null;
@@ -26,32 +27,28 @@ public class Workout {
                 // Check if the member's specific goal matches the first column (goal)
                 if (user.getGoal().equalsIgnoreCase(data[0])) {
                     // Print the entire line if the goal matches
-                    System.out.println("1."+data[1]+"\n2."+data[2]+"\n3."+data[3]+"\n");
-                    int WorkoutChoice=scanner.nextInt();
-                    if(WorkoutChoice==1) {
-                        workout=data[1];
-                    }
-                    else if (WorkoutChoice==2) {
-                        workout= data[2];
-                    }
-                    else if (WorkoutChoice==3) {
-                        workout= data[3];
+                    System.out.println("1." + data[1] + "\n2." + data[2] + "\n3." + data[3] + "\n");
+                    int WorkoutChoice = scanner.nextInt();
+                    if (WorkoutChoice == 1) {
+                        workout = data[1];
+                    } else if (WorkoutChoice == 2) {
+                        workout = data[2];
+                    } else if (WorkoutChoice == 3) {
+                        workout = data[3];
                     }
                     System.out.println("Enter the duration in hours");
-                    int duration=scanner.nextInt();
-                    double burnedCalorie=BurnedCalorieCalculation(workout, user.getGender(), duration, user.getWeight());
+                    int duration = scanner.nextInt();
+                    double burnedCalorie = BurnedCalorieCalculation(workout, user.getGender(), duration, user.getWeight());
 
                     FileWriter WorkoutFilewriter = null;
-                    try{
-                        WorkoutFilewriter = new FileWriter("WorkoutFile.csv",true);
-                        WorkoutFilewriter.write(user.getEmail() + "," +date+","+ exercise + "," +
+                    try {
+                        WorkoutFilewriter = new FileWriter("WorkoutFile.csv", true);
+                        WorkoutFilewriter.write(user.getEmail() + "," + date + "," + exercise + "," +
                                 duration + "," + burnedCalorie + "\n");
                         WorkoutFilewriter.flush();
-                    }
-                    catch (IOException e) {
+                    } catch (IOException e) {
                         System.out.println("An error occurred while writing to the file: " + e.getMessage());
-                    }
-                    finally {
+                    } finally {
                         try {
                             if (WorkoutFilewriter != null) {
                                 WorkoutFilewriter.close();
@@ -63,6 +60,7 @@ public class Workout {
                     //break;
                 }
             }
+
 
         } catch (IOException e) {
             System.err.println("Error reading file: " + e.getMessage());
