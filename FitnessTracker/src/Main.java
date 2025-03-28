@@ -12,6 +12,7 @@ public class Main {
     TDEECalculator tdeeCalculator = new TDEECalculator();
     DashBoard dashboard= new DashBoard();
     Workout workout=new Workout();
+    WorkoutTimer workoutTimer = new WorkoutTimer();
     static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) throws IOException {
@@ -156,9 +157,6 @@ public class Main {
               DashBoardOnProfile(loginEmail);
 
             }
-
-
-
             else if (trackingChoice == 2) {
                 System.out.println("1.Post new workout");
                 System.out.println("2.Past workouts");
@@ -176,9 +174,12 @@ public class Main {
 
                 }
             }
-        }
+        } else if (Choice==4) {
+            System.out.println("Enter hours you wanna workout:");
+            int time= scanner.nextInt();
+            workoutTimer.startTimer(time,scanner);
 
-        else {
+        } else {
             main.consoleApp();
         }
 
