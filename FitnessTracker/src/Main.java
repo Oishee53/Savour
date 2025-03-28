@@ -200,18 +200,10 @@ public class Main {
         }
         public void postNewWorkout(String loginEmail){
             for (User user : userManager.getUserList()) {
-                if (user.getEmail().equalsIgnoreCase(loginEmail) && user.getGender().equalsIgnoreCase("Male")) {
-
-                    workout.NewWorkout(user,scanner,"MaleExercise.csv");
-                }
-                else if (user.getEmail().equalsIgnoreCase(loginEmail) && user.getGender().equalsIgnoreCase("Female")){
-
-                    workout.NewFemaleWorkout(user,scanner);
-
+                if (user.getEmail().equalsIgnoreCase(loginEmail)) {
+                    workout.NewWorkout(user,scanner);
                 }
             }
-
-
         }
 
 
