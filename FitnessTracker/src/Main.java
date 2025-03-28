@@ -7,6 +7,8 @@ public class Main {
     FileHandling fileHandling = new FileHandling();
     static HelperFunctions helperFunctions = new HelperFunctions();
     static UserManager userManager = new UserManager();
+    FitnessGoal fitnessGoal= new FitnessGoal();
+    TDEECalculator tdeeCalculator = new TDEECalculator();
     static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) throws IOException {
@@ -105,7 +107,7 @@ public class Main {
         System.out.println("Registered successfully!!");
     }
 
-    public void login(String filename) {
+    public void login(String filename) throws IOException {
         System.out.print("Enter your email:\n");
         String loginEmail = scanner.next();
         System.out.print("Enter your password:\n");
@@ -113,7 +115,7 @@ public class Main {
         boolean isAuthenticated = helperFunctions.authenticateLogin(loginEmail, loginPassword, filename);
         if (isAuthenticated) {
             System.out.println("Logged in successfully");
-            nextSteps();
+            MainFunctions(loginEmail,loginPassword);
 
         } else {
             System.out.println("Wrong email or password:");
@@ -121,8 +123,33 @@ public class Main {
 
         }
     }
-    public void nextSteps(){
+
+    public void MainFunctions(String loginEmail, String loginPassword) throws IOException {
+        System.out.println("1. View Your Details");
+        System.out.println("2. View Suggestions Based On Your Goal");
+        System.out.println("3. Track your progress");
+        System.out.println("5. Logout");
+        int Choice = scanner.nextInt();
+        scanner.nextLine(); // Consume leftover newline
+        if (Choice == 1) {
+            fileHandling.readUserDetails(loginEmail, loginPassword);
+        } else if (Choice == 2) {
+          suggestionOnGoal(loginEmail);
+        } else if (Choice==3) {
+
+        }
+        else {
+            main.consoleApp();
+        }
+    }
+    public void suggestionOnGoal(String loginEmail){
+        for (User user : userManager.getUserList()) {
+            if (user.getEmail().equalsIgnoreCase(loginEmail)) {
+                fitnessGoal.suggestion(user, tdeeCalculator);
+                    return;
+            }
+            }
+        }
 
 
     }
-}
