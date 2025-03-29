@@ -43,7 +43,7 @@ public class Workout {
                     FileWriter WorkoutFilewriter = null;
                     try {
                         WorkoutFilewriter = new FileWriter("WorkoutFile.csv", true);
-                        WorkoutFilewriter.write(user.getEmail() + "," + date + "," + exercise + "," +
+                        WorkoutFilewriter.write(user.getEmail() + "," + date + "," + workout + "," +
                                 duration + "," + burnedCalorie + "\n");
                         WorkoutFilewriter.flush();
                     } catch (IOException e) {

@@ -132,9 +132,10 @@ public class Main {
     public void MainFunctions(String loginEmail, String loginPassword) throws IOException {
         System.out.println("1. View Your Details");
         System.out.println("2. View Suggestions Based On Your Goal");
-        System.out.println("3. Track your progress");
-        System.out.println("4.Set timer for workout");
-        System.out.println("5. Logout");
+        System.out.println("3..Dashboard ");
+        System.out.println("4.Workouts");
+        System.out.println("5.Set timer for workout");
+        System.out.println("6. Logout");
         int Choice = scanner.nextInt();
         scanner.nextLine(); // Consume leftover newline
         if (Choice == 1) {
@@ -149,15 +150,9 @@ public class Main {
 
 
         else if (Choice==3) {
-            System.out.println("1.Dashboard");
-            System.out.println("2.Workout");
-            int trackingChoice = scanner.nextInt();
-            if (trackingChoice == 1) {
-
-              DashBoardOnProfile(loginEmail);
-
-            }
-            else if (trackingChoice == 2) {
+            DashBoardOnProfile(loginEmail);
+        }
+            else if (Choice == 4) {
                 System.out.println("1.Post new workout");
                 System.out.println("2.Past workouts");
                 int WorkoutChoice = scanner.nextInt();
@@ -174,7 +169,7 @@ public class Main {
 
                 }
             }
-        } else if (Choice==4) {
+         else if (Choice==5) {
             System.out.println("Enter hours you wanna workout:");
             int time= scanner.nextInt();
             workoutTimer.startTimer(time,scanner);
