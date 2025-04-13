@@ -1,61 +1,87 @@
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.Scanner;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.concurrent.atomic.AtomicInteger;
+
 public class WorkoutTimer {
-    private Timer timer;
-    private int timeLeft;
-    private boolean running;
+    Main main;
+    private Thread timerThread;
+    private boolean running = false;
 
+    public int startTimer(int minutes) {
+        AtomicInteger flag = new AtomicInteger();
 
-
-
-    public void startTimer(int hours,Scanner scanner) {
         if (running) {
             System.out.println("Timer is already running!");
-            return;
+            return 0;
         }
 
-        this.timeLeft = hours;
-        this.timer = new Timer();
         running = true;
+        System.out.println("Workout timer started for " + minutes + " min...");
 
-        System.out.println("Workout timer started for " + hours + " hours...");
+        // Timer thread
+        timerThread = new Thread(() -> {
+            try {
+                for (int i = minutes; i > 0 && running; i--) {
+                    System.out.println("Time left: " + i + " min");
+                    Thread.sleep(60000); // sleep for 1 minute
+                }
 
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-                if (timeLeft > 0) {
-                    System.out.println("Time left: " + timeLeft + " min");
-                    timeLeft--;
-                } else {
+                if (running) {
                     System.out.println("Workout complete!");
-                    stopTimer(); // Auto-stop when the timer reaches 0
                 }
+
+                running = false;
+            } catch (InterruptedException e) {
+                System.out.println("Timer interrupted.");
             }
-        };
+        });
 
-        timer.scheduleAtFixedRate(task, 0, 1000*60*60);
+        timerThread.start();
 
-        new Thread(() -> {
+        // Input thread to stop the timer
+        // Input thread to stop the timer
+        Thread inputThread = new Thread(() -> {
+            System.out.println("Enter 1 to stop the timer:");
+            Scanner scanner = new Scanner(System.in);  // Use Scanner, not BufferedReader
             while (running) {
-                System.out.println("Enter 1 to stop the timer:");
-                int stop = scanner.nextInt();
-                if (stop == 1) {
-                    stopTimer();
+                if (scanner.hasNextLine()) {
+                    String input = scanner.nextLine();
+                    if (input.trim().equals("1")) {
+                        int stopFlag = stopTimer();
+                        flag.set(stopFlag);
+                        break;
+                    }
                 }
             }
-        }).start();
+            // DO NOT close the scanner here
+        });
+
+        inputThread.start();
+
+        try {
+            // wait for both threads to finish
+            timerThread.join();
+            inputThread.join();
+        } catch (InterruptedException e) {
+            System.out.println("Thread interrupted: " + e.getMessage());
+        }
+
+        return flag.get();
     }
 
-    public synchronized void stopTimer() {
+
+    public int stopTimer() {
+        int flag=0;
         if (running) {
             running = false;
-            if (timer != null) {
-                timer.cancel();
-                timer = null;
+            if (timerThread != null) {
+                timerThread.interrupt();
+                flag=1;
             }
             System.out.println("Workout timer stopped.");
         }
+        return flag;
     }
 
 }

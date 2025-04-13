@@ -30,34 +30,37 @@ public class Main {
         main.consoleApp();
     }
 
-
     public void consoleApp() throws IOException {
-        System.out.println("Workout and Diet Tracker\n");
-        System.out.println("Enter your choice:");
-        System.out.println("1.Register");
-        System.out.println("2.Login");
-        int initialChoice = scanner.nextInt();
-        if (initialChoice == 1) {
-
-            registration();
-
-        } else if (initialChoice == 2) {
-
-            login("UserFile.csv");
-
-        }
-
+        System.out.println(" _   _       _        _ _____ _ _   \n" +
+                "| \\ | |_   _| |_ _ __(_)  ___(_) |_ \n" +
+                "|  \\| | | | | __| '__| | |_  | | __|\n" +
+                "| |\\  | |_| | |_| |  | |  _| | | |_ \n" +
+                "|_| \\_|\\__,_|\\__|_|  |_|_|   |_|\\__|");
+            while(true) {
+                System.out.println("Enter your choice:");
+                System.out.println("1. Register");
+                System.out.println("2. Login");
+                System.out.println("3. Exit");
+                int initialChoice = scanner.nextInt();
+                if (initialChoice == 1) {
+                    registration();
+                } else if (initialChoice == 2) {
+                    login("UserFile.csv");
+                } else if (initialChoice == 3) {
+                    System.out.println("Goodbye!");
+                    break;
+                } else {
+                    System.out.println("Invalid choice. Try again.");
+                }
+            }
 
     }
 
     private static void createCSVFile(String fileName) {
         File file = new File(fileName);
         try {
-            // Create the file
             if (file.createNewFile()) {
                 System.out.println("CSV file created: " + file.getName());
-            } else {
-                // System.out.println("CSV file already exists: " + file.getName());
             }
         } catch (IOException e) {
             System.out.println("An error occurred while creating: " + fileName);
@@ -82,7 +85,7 @@ public class Main {
         }
         if (selectGender == 1) {
             gender = "Male";
-        } else if (selectGender == 2) {
+        } else {
             gender = "Female";
         }
         System.out.println("Enter Age");
@@ -101,8 +104,7 @@ public class Main {
         }
         if (selectGoal == 1) {
             goal = "StrengthBuilding";
-        }
-        if (selectGoal == 2) {
+        } else {
             goal = "WeightLoss";
         }
         User user = new User(name, email, password, gender, age, weight, height, goal);
@@ -120,100 +122,101 @@ public class Main {
         boolean isAuthenticated = helperFunctions.authenticateLogin(loginEmail, loginPassword, filename);
         if (isAuthenticated) {
             System.out.println("Logged in successfully");
-            MainFunctions(loginEmail,loginPassword);
-
+            MainFunctions(loginEmail, loginPassword);
         } else {
             System.out.println("Wrong email or password:");
-
-
         }
     }
 
     public void MainFunctions(String loginEmail, String loginPassword) throws IOException {
-        System.out.println("1. View Your Details");
-        System.out.println("2. View Suggestions Based On Your Goal");
-        System.out.println("3..Dashboard ");
-        System.out.println("4.Workouts");
-        System.out.println("5.Set timer for workout");
-        System.out.println("6. Logout");
-        int Choice = scanner.nextInt();
-        scanner.nextLine(); // Consume leftover newline
-        if (Choice == 1) {
 
-            fileHandling.readUserDetails(loginEmail, loginPassword);
+            System.out.println("\nMain Menu:");
+            System.out.println("1. View Your Details");
+            System.out.println("2. View your customized plan");
+            System.out.println("3. Dashboard");
+            System.out.println("4. Workouts");
+            System.out.println("5. Set timer for workout");
+            System.out.println("6. Logout");
+            int choice = scanner.nextInt();
+            scanner.nextLine();
 
-        } else if (Choice == 2) {
+            if (choice == 1) {
+                fileHandling.readUserDetails(loginEmail, loginPassword);
+                MainFunctions(loginEmail,loginPassword);
+            } else if (choice == 2) {
+                suggestionOnGoal(loginEmail);
+                MainFunctions(loginEmail,loginPassword);
+            } else if (choice == 3) {
+                DashBoardOnProfile(loginEmail);
+                MainFunctions(loginEmail,loginPassword);
+            } else if (choice == 4) {
+                handleWorkoutMenu(loginEmail);
+                MainFunctions(loginEmail,loginPassword);
+            } else if (choice == 5) {
+                System.out.println("Enter number of minutes you want to workout:");
+                int time = scanner.nextInt();
+                scanner.nextLine(); // clear buffer
+                int flag=workoutTimer.startTimer(time);
+                if(flag==1)
+                    MainFunctions(loginEmail,loginPassword);
 
-            suggestionOnGoal(loginEmail);
-
-        }
-
-
-        else if (Choice==3) {
-            DashBoardOnProfile(loginEmail);
-        }
-            else if (Choice == 4) {
-                System.out.println("1.Post new workout");
-                System.out.println("2.Past workouts");
-                int WorkoutChoice = scanner.nextInt();
-                if (WorkoutChoice == 1) {
-
-                    //Post new workouts
-                    postNewWorkout(loginEmail);
-
-                }
-                else if (WorkoutChoice == 2) {
-
-                    //Past workouts
-                    pastWorkout(loginEmail);
-
-                }
+            } else if (choice == 6) {
+                System.out.println("Logged out successfully.\n");
+            } else {
+                System.out.println("Invalid choice, try again.");
             }
-         else if (Choice==5) {
-            System.out.println("Enter hours you wanna workout:");
-            int time= scanner.nextInt();
-            workoutTimer.startTimer(time,scanner);
-
-        } else {
-            main.consoleApp();
-        }
-
-        }
-
-
-    public void suggestionOnGoal(String loginEmail){
-        for (User user : userManager.getUserList()) {
-            if (user.getEmail().equalsIgnoreCase(loginEmail)) {
-                fitnessGoal.suggestion(user, tdeeCalculator);
-                    return;
-            }
-            }
-        }
-        public void DashBoardOnProfile(String loginEmail){
-        for (User user : userManager.getUserList()) {
-                if (user.getEmail().equalsIgnoreCase(loginEmail)) {
-                    dashboard.graph(user);
-                }
-            }
-        }
-        public void postNewWorkout(String loginEmail) throws FileNotFoundException {
-            for (User user : userManager.getUserList()) {
-                if (user.getEmail().equalsIgnoreCase(loginEmail)) {
-                    workout.NewWorkout(user,scanner);
-                }
-            }
-        }
-
-        public void pastWorkout(String loginEmail){
-            for (User user : userManager.getUserList()) {
-                if (user.getEmail().equalsIgnoreCase(loginEmail)) {
-                    workout.pastWorkout(user);
-                }
-            }
-
-
-        }
-
 
     }
 
+    public void handleWorkoutMenu(String loginEmail) throws FileNotFoundException {
+        while (true) {
+            System.out.println("\nWorkout Menu:");
+            System.out.println("1. Post new workout");
+            System.out.println("2. Past workouts");
+            System.out.println("3. Back to main menu");
+            int workoutChoice = scanner.nextInt();
+            if (workoutChoice == 1) {
+                postNewWorkout(loginEmail);
+            } else if (workoutChoice == 2) {
+                pastWorkout(loginEmail);
+            } else if (workoutChoice == 3) {
+                break;
+            } else {
+                System.out.println("Invalid choice.");
+            }
+        }
+    }
+
+    public void suggestionOnGoal(String loginEmail) {
+        for (User user : userManager.getUserList()) {
+            if (user.getEmail().equalsIgnoreCase(loginEmail)) {
+                fitnessGoal.suggestion(user, tdeeCalculator);
+                return;
+            }
+        }
+    }
+
+    public void DashBoardOnProfile(String loginEmail) {
+        for (User user : userManager.getUserList()) {
+            if (user.getEmail().equalsIgnoreCase(loginEmail)) {
+                dashboard.graph(user);
+            }
+        }
+    }
+
+    public void postNewWorkout(String loginEmail) throws FileNotFoundException {
+        for (User user : userManager.getUserList()) {
+            if (user.getEmail().equalsIgnoreCase(loginEmail)) {
+                workout.NewWorkout(user, scanner);
+            }
+        }
+    }
+
+    public void pastWorkout(String loginEmail) {
+        for (User user : userManager.getUserList()) {
+            if (user.getEmail().equalsIgnoreCase(loginEmail)) {
+                workout.pastWorkout(user);
+            }
+        }
+    }
+}
